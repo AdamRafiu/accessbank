@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Access Bank | Login</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #e9f0fc 0%, #d9e3f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background shapes */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0,51,102,0.08) 0%, rgba(0,51,102,0) 70%);
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+            animation: floatShape 18s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0,119,190,0.06) 0%, rgba(0,119,190,0) 70%);
+            border-radius: 50%;
+            bottom: -150px;
+            right: -120px;
+            animation: floatShape 22s infinite alternate-reverse ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes floatShape {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            100% { transform: translate(40px, 40px) scale(1.2); opacity: 0.2; }
+        }
+
+        /* Main card container */
+        .glass-card {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(2px);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 51, 102, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            animation: cardGlow 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 55px -12px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes cardGlow {
+            0% { opacity: 0; transform: scale(0.96); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .login-section {
+            padding: 32px 28px 40px;
+        }
+
+        /* Logo & header */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo-circle {
+            background: linear-gradient(135deg, #003366 0%, #002244 100%);
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 18px -8px rgba(0,51,102,0.3);
+        }
+
+        .logo-circle img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .brand-header h1 {
+            text-transform: capitalize;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #003366, #0066a0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .brand-tag {
+            font-size: 0.8rem;
+            color: #4a627a;
+            margin-top: 6px;
+        }
+
+        /* Form styling */
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group i.icon-left {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8a9bb0;
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 28px;
+            background: #ffffff;
+            transition: all 0.25s ease;
+            outline: none;
+            font-weight: 500;
+            color: #0f2b3d;
+        }
+
+        .input-group input:focus {
+            border-color: #003366;
+            box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.15);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #7e95ad;
+            font-size: 1.1rem;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 16px 0 24px;
+            font-size: 0.85rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .forgot-link {
+            color: #003366;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px dashed transparent;
+        }
+
+        .forgot-link:hover {
+            border-bottom-color: #003366;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(95deg, #003366, #004c8c);
+            border: none;
+            padding: 15px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 6px 14px rgba(0, 51, 102, 0.25);
+            transition: all 0.25s;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(95deg, #002244, #003d6b);
+            transform: scale(1.01);
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border-left: 4px solid #d32f2f;
+            padding: 12px 16px;
+            border-radius: 20px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #b00020;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            display: none;
+        }
+
+        .demo-hint {
+            background: #eef4ff;
+            border-radius: 20px;
+            padding: 10px 14px;
+            font-size: 0.75rem;
+            margin: 18px 0 0;
+            color: #004070;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .demo-hint span {
+            font-family: monospace;
+            background: white;
+            padding: 3px 10px;
+            border-radius: 30px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 550px) {
+            .glass-card { max-width: 100%; border-radius: 32px; }
+            .login-section { padding: 28px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-card">
+    <div class="login-section">
+        <div class="brand-header">
+            <div class="logo-circle">
+                <img src="logo.png" alt="Access Bank logo" onerror="this.src='https://via.placeholder.com/50?text=AB'">
+            </div>
+            <h1>Access Bank</h1>
+            <div class="brand-tag">secure digital access</div>
+        </div>
+
+        <form id="loginFormElement" novalidate>
+            <div class="input-group">
+                <i class="fas fa-envelope icon-left"></i>
+                <input type="email" id="loginEmail" placeholder="Email address" autocomplete="email" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock icon-left"></i>
+                <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
+                <button type="button" class="toggle-password" id="togglePasswordBtn">
+                    <i class="far fa-eye-slash"></i>
+                </button>
+            </div>
+            
+            <div class="form-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="rememberCheckbox"> Remember me
+                </label>
+                <a href="#" class="forgot-link" id="forgotLink">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="btn-primary" id="loginBtn">
+                <i class="fas fa-arrow-right-to-bracket"></i>
+                <span class="btn-text">Sign In</span>
+            </button>
+            
+            <div id="errorMessageContainer" class="error-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="errorText"></span>
+            </div>
+            
+            <!-- <div class="demo-hint">
+                <i class="fas fa-flask"></i> Demo credentials:
+                <span>demo@accessbank.com / accessbank2026</span>
+                <span>smithelisasisha98@gmail.com / Aisha12345</span>
+            </div> -->
+        </form>
+    </div>
+</div>
+
+<script>
+    // ---------- DEMO USERS DATABASE ----------
+    const validUsers = [
+        { 
+            email: "demo@accessbank.com", 
+            password: "accessbank2026", 
+            fullName: "Thabo Nkosi", 
+            balance: 48250.00, 
+            accountSuffix: "4521", 
+            currency: "ZAR",
+            transactions: [
+                { desc: "Online Shopping - Takealot", amount: -1250.50, date: "Today", positive: false },
+                { desc: "Salary Deposit", amount: 18500.00, date: "Yesterday", positive: true },
+                { desc: "Netflix Subscription", amount: -159.00, date: "Dec 2", positive: false },
+                { desc: "Interest Earned", amount: 84.30, date: "Dec 1", positive: true }
+            ]
+        },
+        { 
+            email: "fattylamin2020@gmail.com", 
+            password: "fala2020", 
+            fullName: "Aisha Smithelisa", 
+            balance: 123750.00, 
+            accountSuffix: "8932", 
+            currency: "ZAR",
+            transactions: [
+                { desc: "Freelance Payment", amount: 4200.00, date: "Today", positive: true },
+                { desc: "Grocery Store", amount: -850.20, date: "Yesterday", positive: false },
+                { desc: "Transfer to Savings", amount: -2000.00, date: "Dec 3", positive: false },
+                { desc: "Dividend Payout", amount: 320.75, date: "Nov 30", positive: true }
+            ]
+        },
+        { 
+            email: "user@accessbank.co.za", 
+            password: "Access@123", 
+            fullName: "Michael van der Merwe", 
+            balance: 8920.45, 
+            accountSuffix: "2076", 
+            currency: "ZAR",
+            transactions: [
+                { desc: "Uber Ride", amount: -125.00, date: "Today", positive: false },
+                { desc: "ATM Withdrawal", amount: -500.00, date: "Dec 2", positive: false },
+                { desc: "Refund", amount: 299.99, date: "Dec 1", positive: true }
+            ]
+        }
+    ];
+
+    // DOM elements
+    const loginForm = document.getElementById('loginFormElement');
+    const emailInput = document.getElementById('loginEmail');
+    const passwordInput = document.getElementById('loginPassword');
+    const loginBtn = document.getElementById('loginBtn');
+    const errorContainer = document.getElementById('errorMessageContainer');
+    const errorTextSpan = document.getElementById('errorText');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const forgotLink = document.getElementById('forgotLink');
+    const rememberCheck = document.getElementById('rememberCheckbox');
+
+    function showError(message) {
+        errorTextSpan.innerText = message;
+        errorContainer.style.display = 'flex';
+        setTimeout(() => {
+            errorContainer.style.display = 'none';
+        }, 5000);
+    }
+
+    function hideError() {
+        errorContainer.style.display = 'none';
+    }
+
+    async function validateAndLogin(email, password) {
+        const originalBtnHtml = loginBtn.innerHTML;
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<span class="spinner"></span> <span class="btn-text">Authenticating...</span>';
+        
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        const foundUser = validUsers.find(user => user.email.toLowerCase() === email.toLowerCase() && user.password === password);
+        
+        if (foundUser) {
+            // Store user data in localStorage for the dashboard page
+            localStorage.setItem('accessBankUser', JSON.stringify(foundUser));
+            
+            if (rememberCheck.checked) {
+                localStorage.setItem('accessBankRememberEmail', email);
+            } else {
+                localStorage.removeItem('accessBankRememberEmail');
+            }
+            
+            // Redirect to dashboard.html
+            window.location.href = "dashboard.html";
+        } else {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = originalBtnHtml;
+            showError("No account associated with this profile. Please verify your credentials.");
+            const card = document.querySelector('.glass-card');
+            card.style.animation = 'shakeError 0.4s ease-in-out';
+            setTimeout(() => { card.style.animation = ''; }, 500);
+        }
+    }
+
+    // Load remembered email
+    function loadStoredCredentials() {
+        const storedEmail = localStorage.getItem('accessBankRememberEmail');
+        if (storedEmail) {
+            emailInput.value = storedEmail;
+            rememberCheck.checked = true;
+        }
+    }
+
+    // Event listeners
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        if (!email || !password) {
+            showError("Please enter both email and password.");
+            return;
+        }
+        if (!email.includes('@') || !email.includes('.')) {
+            showError("Enter a valid email address.");
+            return;
+        }
+        await validateAndLogin(email, password);
+    });
+
+    togglePasswordBtn.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        const icon = togglePasswordBtn.querySelector('i');
+        if (type === 'text') {
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        } else {
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    });
+
+    forgotLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showError("🔐 For security, please contact Access Bank support or visit a branch to reset your credentials.");
+    });
+
+    loadStoredCredentials();
+</script>
+</body>
+</html>

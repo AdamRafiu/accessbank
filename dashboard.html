@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Access Bank Gambia | Smart Dashboard</title>
+  <!-- Google Fonts + Font Awesome CDN -->  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #f4f9ff 0%, #e9eef4 100%);
+      min-height: 100vh;
+      color: #1a2c3e;
+    }
+
+    .app-wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 24px 40px;
+    }
+
+    /* Header / Nav */
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(12px);
+      padding: 12px 24px;
+      border-radius: 60px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icon {
+      background: linear-gradient(135deg, #003366, #002244);
+      width: 48px;
+      height: 48px;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 14px rgba(0,51,102,0.2);
+    }
+    .logo-icon img {
+        width: 100%;
+        height: 100%;
+      font-size: 26px;
+      color: white;
+    }
+    .logo-text {
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: linear-gradient(120deg, #003366, #0066a0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #1e4663;
+      font-size: 1rem;
+      transition: all 0.2s;
+      padding: 6px 0;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover {
+      color: #003366;
+      border-bottom-color: #003366;
+    }
+
+    /* Logout button style */
+    .logout-btn {
+      background: rgba(199, 54, 43, 0.1);
+      border-radius: 40px;
+      padding: 6px 18px !important;
+      border-bottom: none !important;
+      color: #c7362b !important;
+    }
+    .logout-btn:hover {
+      background: rgba(199, 54, 43, 0.2);
+      color: #a0281f !important;
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+    .burger div {
+      width: 28px;
+      height: 3px;
+      background: #003366;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    /* Profile card */
+    .profile-card {
+      background: white;
+      border-radius: 48px;
+      padding: 24px 32px;
+      margin-bottom: 28px;
+      box-shadow: 0 20px 35px -10px rgba(0,0,0,0.08);
+      transition: transform 0.25s ease;
+    }
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .greeting h2 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #0b2b42;
+    }
+    .greeting p {
+      color: #587b9c;
+      font-weight: 500;
+      margin-top: 6px;
+    }
+    .avatar {
+      background: linear-gradient(125deg, #eef2fa, #e0e8f2);
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 14px rgba(0,0,0,0.05);
+    }
+    .avatar img {
+      border-radius: 50%;
+      height: 100%;
+      width: 100%;
+      font-size: 42px;
+      color: #003366;
+    }
+    .balance-area {
+      margin-top: 28px;
+      text-align: center;
+      background: linear-gradient(115deg, #f0f6fe, #ffffff);
+      border-radius: 48px;
+      padding: 24px 16px;
+    }
+    .balance-label {
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      font-weight: 600;
+      color: #4b6f8e;
+    }
+    .balance-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #003366;
+      margin: 12px 0 6px;
+      word-break: break-word;
+    }
+    .balance-number span {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    /* action buttons */
+    .action-group {
+      display: flex;
+      gap: 18px;
+      margin: 28px 0 20px;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      flex: 1;
+      background: white;
+      border: 1px solid #cbdde9;
+      padding: 14px 0;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.25s;
+      color: #1e4663;
+    }
+    .btn-action i {
+      font-size: 1.2rem;
+    }
+    .btn-deposit {
+      background: #003366;
+      border: none;
+      color: white;
+      box-shadow: 0 6px 14px rgba(0,51,102,0.2);
+    }
+    .btn-deposit:hover {
+      background: #002244;
+      transform: translateY(-2px);
+    }
+    .btn-withdraw {
+      background: white;
+      border: 1px solid #003366;
+      color: #003366;
+    }
+    .btn-withdraw:hover {
+      background: #eef4ff;
+      transform: translateY(-2px);
+    }
+
+    /* transaction section */
+    .transaction-section {
+      background: white;
+      border-radius: 40px;
+      padding: 24px 20px;
+      margin: 24px 0;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+    }
+    .traHeader {
+      margin-bottom: 24px;
+    }
+    .traHeader h4 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #002b4d;
+    }
+    .traHeader p {
+      color: #5e7e9c;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+    .transactions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fafcff;
+      padding: 16px 18px;
+      border-radius: 28px;
+      transition: all 0.2s;
+      border: 1px solid #eef2f8;
+    }
+    .transaction-item:hover {
+      background: #ffffff;
+      transform: scale(1.01);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+    .tra-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .icon-bg {
+      width: 48px;
+      height: 48px;
+      background: #eef3fc;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-bg i {
+      font-size: 24px;
+      color: #003366;
+    }
+    .tx-details p {
+      font-weight: 700;
+      color: #0f2b3d;
+    }
+    .tx-details small {
+      font-size: 0.7rem;
+      color: #7892ac;
+    }
+    .tx-amount {
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .positive {
+      color: #1f8a4c;
+    }
+    .negative {
+      color: #c7362b;
+    }
+    .empty-transactions {
+      text-align: center;
+      padding: 40px;
+      color: #8ea3bb;
+    }
+
+    /* modal overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s ease;
+    }
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal-card {
+      background: white;
+      max-width: 400px;
+      width: 90%;
+      border-radius: 48px;
+      padding: 32px 28px;
+      text-align: center;
+      transform: scale(0.95);
+      transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+    }
+    .active .modal-card {
+      transform: scale(1);
+    }
+    .modal-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #003366;
+    }
+    .modal-card input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1.2rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 60px;
+      margin: 20px 0;
+      font-family: monospace;
+      font-weight: 600;
+      text-align: center;
+    }
+    .modal-card input:focus {
+      border-color: #003366;
+      outline: none;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 40px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+    .confirm-btn {
+      background: #003366;
+      color: white;
+    }
+    .cancel-btn {
+      background: #eef2f5;
+      color: #2c3e50;
+    }
+
+    /* custom alert popup (verification message) */
+    .custom-alert-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2100;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+    .custom-alert-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .custom-alert-card {
+      background: white;
+      max-width: 380px;
+      width: 85%;
+      border-radius: 48px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 30px 40px rgba(0,0,0,0.3);
+    }
+    .custom-alert-card i {
+      font-size: 52px;
+      color: #c0392b;
+      margin-bottom: 16px;
+    }
+    .custom-alert-card h3 {
+      font-size: 1.6rem;
+      margin: 10px 0;
+      color: #1e4663;
+    }
+    .custom-alert-card p {
+      font-size: 1rem;
+      margin: 20px 0;
+      color: #2c3e50;
+      line-height: 1.4;
+    }
+    .alert-close-btn {
+      background: #003366;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 40px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    /* footer */
+    .footer {
+      background: #0f2a3b;
+      color: #cfdfed;
+      border-radius: 40px;
+      padding: 28px 24px;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      list-style: none;
+      margin-bottom: 20px;
+    }
+    .footer-link {
+      color: #cfdfed;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+    .footer-link:hover {
+      color: white;
+    }
+    .tonto {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    /* responsive */
+    @media (max-width: 780px) {
+      .app-wrapper {
+        padding: 16px;
+      }
+      .container {
+        border-radius: 40px;
+      }
+      .nav-links {
+        position: fixed;
+        top: 80px;
+        right: -250px;
+        width: 220px;
+        background: white;
+        flex-direction: column;
+        padding: 24px;
+        border-radius: 32px;
+        box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+        transition: right 0.3s ease;
+        gap: 20px;
+        z-index: 1000;
+      }
+      .nav-links.nav-active {
+        right: 20px;
+      }
+      .burger {
+        display: flex;
+      }
+      .balance-number {
+        font-size: 2.2rem;
+      }
+      .profile-row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+    @media (max-width: 480px) {
+      .btn-action {
+        font-size: 0.85rem;
+      }
+      .transaction-item {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .transaction-item {
+      animation: fadeSlideUp 0.3s ease forwards;
+    }
+  </style>
+</head>
+<body>
+<div class="app-wrapper">
+  <!-- Header / Nav -->
+  <div class="container">
+    <div class="logo">
+      <div class="logo-icon"><img src="logo.png" alt="access bank logo"></div>
+      <div class="logo-text">Access Bank Gambia</div>
+    </div>
+    <nav class="nav-links" id="navLinks">
+      <a href="#" data-nav="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+      <a href="#" data-nav="transfers"><i class="fas fa-money-bill-transfer"></i> Transfers</a>
+      <a href="#" data-nav="support"><i class="fas fa-headset"></i> Support</a>
+      <a href="#" data-nav="security"><i class="fas fa-shield"></i> Security</a>
+      <a href="#" id="manualLogoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="burger" id="burgerMenu">
+      <div></div><div></div><div></div>
+    </div>
+  </div>
+
+  <!-- Profile & Balance card -->
+  <div class="profile-card">
+    <div class="profile-row">
+      <div class="greeting">
+        <h2>Hi, Lamin <i class="fas fa-hand-peace"></i></h2>
+        <p><i class="fas fa-check-circle" style="color:#2e7d32;"></i> Verified Account · Smart Access</p>
+      </div>
+      <div class="avatar">
+        <img src="profile.jpg" alt="profile pic">
+      </div>
+    </div>
+    <div class="balance-area">
+      <div class="balance-label">TOTAL BALANCE (GMD)</div>
+      <div class="balance-number" id="balanceDisplay">D 8,741,258.74</div>
+      <small><i class="fas fa-lock"></i> Private & encrypted</small>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-group">
+    <button class="btn-action btn-deposit" id="depositBtn"><i class="fas fa-arrow-down-to-bracket"></i> Deposit</button>
+    <button class="btn-action btn-withdraw" id="withdrawBtn"><i class="fas fa-arrow-up-from-bracket"></i> Withdraw</button>
+  </div>
+
+  <!-- Transactions Section (dynamic) -->
+  <div class="transaction-section">
+    <div class="traHeader">
+      <h4><i class="fas fa-clock-rotate-left"></i> Transactions</h4>
+      <p id="currentDateLabel">latest activity</p>
+    </div>
+    <div id="transactionsContainer" class="transactions-list">
+      <!-- dynamic content injected via JS -->
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <ul class="footer-links">
+      <li><a href="#" class="footer-link" data-policy="service">Service Digital Agreement</a></li>
+      <li><a href="#" class="footer-link" data-policy="privacy">Privacy Policy</a></li>
+      <li><a href="#" class="footer-link" data-policy="security">Online Security</a></li>
+    </ul>
+    <p class="tonto">© 2026 Access Bank Gambia Financial Services. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- Modal for Deposit/Withdraw (amount entry) -->
+<div id="transactionModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3 id="modalTitle">Deposit Funds</h3>
+    <input type="number" id="amountInput" placeholder="Enter amount (GMD)" step="0.01" min="1">
+    <div class="modal-actions">
+      <button class="cancel-btn" id="modalCancelBtn">Cancel</button>
+      <button class="confirm-btn" id="modalConfirmBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom popup alert for verification message -->
+<div id="verificationAlert" class="custom-alert-overlay">
+  <div class="custom-alert-card">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h3>Account Verification Required</h3>
+    <p>Contact Access Bank customer care to verify the account.</p>
+    <button class="alert-close-btn" id="closeVerificationBtn">OK</button>
+  </div>
+</div>
+
+<script>
+  // ---------- SESSION MANAGEMENT (simple session flag) ----------
+  const SESSION_KEY = 'access_bank_session';
+  
+  // Initialize session when page loads
+  function initSession() {
+    if (!sessionStorage.getItem(SESSION_KEY)) {
+      sessionStorage.setItem(SESSION_KEY, 'active');
+    }
+  }
+  
+  function isSessionActive() {
+    return sessionStorage.getItem(SESSION_KEY) === 'active';
+  }
+  
+  function clearSessionAndLogout() {
+    sessionStorage.removeItem(SESSION_KEY);
+    // Optional: clear any other user data
+    localStorage.removeItem('capitec_balance_gmd');
+    localStorage.removeItem('capitec_transactions_gmd');
+    // Redirect to login page
+    window.location.href = "index.html";
+  }
+  
+  // Manual logout from the logout button
+  function setupManualLogout() {
+    const logoutBtn = document.getElementById('manualLogoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const confirmLogout = confirm("Are you sure you want to logout? You will be redirected to the login page.");
+        if (confirmLogout) {
+          clearSessionAndLogout();
+        }
+      });
+    }
+  }
+  
+  // ---------- INTERCEPT ALL EXTERNAL PAGE NAVIGATION ----------
+  // This function will show a confirm popup: "Do you want to logout? (Yes = logout and go to login.html, No = stay on current page)"
+  function handleExternalNavigation(event, targetUrl) {
+    // Prevent the default navigation
+    event.preventDefault();
+    // Show custom confirm dialog
+    const userConfirmed = confirm("You are about to leave the dashboard. Do you want to logout?");
+    if (userConfirmed) {
+      // Logout and redirect to login page (as requested)
+      clearSessionAndLogout();
+    }
+    // else: do nothing, stay on same page
+  }
+  
+  // Determine if a link leads to a different page (not current page, not a hash, not javascript)
+  function isPageNavigationLink(href) {
+    if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('void(0)')) {
+      return false;
+    }
+    // Check if it's a same-page anchor (starts with #)
+    if (href.startsWith('#')) return false;
+    // Compare with current URL (ignore hash and query parameters variations, but treat different path as navigation)
+    try {
+      const currentUrl = new URL(window.location.href);
+      const targetUrl = new URL(href, window.location.href);
+      // If it's exactly the same path, same origin, same search, same hash? ignore
+      if (targetUrl.pathname === currentUrl.pathname && targetUrl.search === currentUrl.search) {
+        return false;
+      }
+      // Different pathname -> navigation to another page
+      return true;
+    } catch(e) {
+      // if invalid URL, treat as not a navigation
+      return false;
+    }
+  }
+  
+  // Attach click listeners to all anchor tags that lead to other pages
+  function setupNavigationGuard() {
+    const allLinks = document.querySelectorAll('a');
+    allLinks.forEach(link => {
+      // Skip links that already have a specific handler that we don't want to override?
+      // But we will add a new listener that runs before any other? Actually we want to intercept.
+      // We'll add a capturing event listener to ensure we catch it early.
+      link.addEventListener('click', function(e) {
+        const href = link.getAttribute('href');
+        // If session is active AND this link leads to a different page
+        if (isSessionActive() && isPageNavigationLink(href)) {
+          // Check if the link has any custom handler that already prevents default? 
+          // We'll still intercept, but we must ensure we don't double-fire. 
+          // Use stopPropagation? Actually we just prevent default.
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          handleExternalNavigation(e, href);
+        }
+      });
+    });
+  }
+  
+  // Also add a beforeunload warning to prevent accidental page refresh or closing tab
+  window.addEventListener('beforeunload', (e) => {
+    if (isSessionActive()) {
+      e.preventDefault();
+      e.returnValue = 'You have an active session. If you leave now, you will be logged out.';
+    }
+  });
+  
+  // ---------- ORIGINAL BANK LOGIC (unchanged except added session init) ----------
+  let currentBalance = 8741258.74;   // exactly D 8,741,258.74
+  let transactions = [];
+
+  const formatGMD = (amount) => {
+    return `D ${amount.toLocaleString('en-GM', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
+  function loadBankData() {
+    const savedBalance = localStorage.getItem('capitec_balance_gmd');
+    if (savedBalance !== null && !isNaN(parseFloat(savedBalance))) {
+      currentBalance = parseFloat(savedBalance);
+    } else {
+      currentBalance = 8741258.74;
+    }
+    const savedTransactions = localStorage.getItem('capitec_transactions_gmd');
+    if (savedTransactions) {
+      try {
+        transactions = JSON.parse(savedTransactions);
+      } catch(e) { transactions = []; }
+    }
+    if (!transactions || transactions.length === 0) {
+      seedDemoTransactions();
+    }
+    updateUI();
+  }
+
+  function persistData() {
+    localStorage.setItem('capitec_balance_gmd', currentBalance.toFixed(2));
+    localStorage.setItem('capitec_transactions_gmd', JSON.stringify(transactions));
+  }
+
+  function seedDemoTransactions() {
+    const now = new Date();
+    transactions = [
+      { id: Date.now() + 1, type: 'deposit', amount: 3500000.00, date: new Date(now.getTime() - 86400000), description: 'Salary deposit', recipient: 'Employer Inc.' },
+      { id: Date.now() + 2, type: 'deposit', amount: 2450000.00, date: new Date(now.getTime() - 172800000), description: 'Business income', recipient: 'Retail Ventures' },
+      { id: Date.now() + 3, type: 'deposit', amount: 2791258.74, date: new Date(now.getTime() - 259200000), description: 'Investment return', recipient: 'Wealth Fund' },
+      { id: Date.now() + 4, type: 'withdraw', amount: 12500.50, date: new Date(now.getTime() - 43200000), description: 'Online shopping', recipient: 'Jumia Gambia' },
+      { id: Date.now() + 5, type: 'withdraw', amount: 8400.00, date: new Date(now.getTime() - 21600000), description: 'Restaurant payment', recipient: 'Cafe Bar' },
+      { id: Date.now() + 6, type: 'withdraw', amount: 3100.25, date: new Date(now.getTime() - 10800000), description: 'Utility bill', recipient: 'NAWEC' }
+    ];
+    persistData();
+  }
+
+  function updateUI() {
+    const balanceEl = document.getElementById('balanceDisplay');
+    if (balanceEl) {
+      balanceEl.innerText = formatGMD(currentBalance);
+    }
+    renderTransactions();
+    const today = new Date();
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+    document.getElementById('currentDateLabel').innerHTML = `<i class="far fa-calendar-alt"></i> ${today.toLocaleDateString('en-GM', options)}`;
+  }
+
+  function renderTransactions() {
+    const container = document.getElementById('transactionsContainer');
+    if (!container) return;
+    if (transactions.length === 0) {
+      container.innerHTML = `<div class="empty-transactions"><i class="fas fa-receipt"></i> <br>No transactions yet</div>`;
+      return;
+    }
+    let html = '';
+    transactions.forEach(tx => {
+      const isDeposit = tx.type === 'deposit';
+      const iconClass = isDeposit ? 'fa-arrow-down' : 'fa-arrow-up';
+      const amountClass = isDeposit ? 'positive' : 'negative';
+      const sign = isDeposit ? '+' : '-';
+      const amountAbs = Math.abs(tx.amount).toLocaleString('en-GM', { minimumFractionDigits: 2 });
+      const txDate = new Date(tx.date);
+      const dateStr = txDate.toLocaleDateString('en-GM', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+      const description = tx.description || (isDeposit ? 'Deposit' : 'Withdrawal');
+      html += `
+        <div class="transaction-item">
+          <div class="tra-left">
+            <div class="icon-bg"><i class="fas ${iconClass}"></i></div>
+            <div class="tx-details">
+              <p>${description} <span style="font-size:11px;">${tx.recipient ? '· '+tx.recipient.substring(0,18) : ''}</span></p>
+              <small><i class="far fa-clock"></i> ${dateStr}</small>
+            </div>
+          </div>
+          <div class="tx-amount ${amountClass}">${sign} D ${amountAbs}</div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  // -------------- MODAL HANDLING (Deposit / Withdraw) --------------
+  let activeModalType = null;
+  const modal = document.getElementById('transactionModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const amountInput = document.getElementById('amountInput');
+  const confirmBtn = document.getElementById('modalConfirmBtn');
+  const cancelBtn = document.getElementById('modalCancelBtn');
+  const verificationAlert = document.getElementById('verificationAlert');
+  const closeVerification = document.getElementById('closeVerificationBtn');
+
+  function openModal(type) {
+    activeModalType = type;
+    modalTitle.innerText = type === 'deposit' ? 'Deposit Funds' : 'Withdraw Funds';
+    amountInput.value = '';
+    amountInput.placeholder = type === 'deposit' ? 'Enter amount in Dalasi (GMD)' : 'Enter amount to withdraw (GMD)';
+    modal.classList.add('active');
+    amountInput.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    activeModalType = null;
+  }
+
+  function showVerificationPopup() {
+    if (verificationAlert) verificationAlert.classList.add('active');
+  }
+
+  function closeVerificationPopup() {
+    if (verificationAlert) verificationAlert.classList.remove('active');
+  }
+
+  function handleTransactionAttempt() {
+    let rawAmount = parseFloat(amountInput.value);
+    if (isNaN(rawAmount) || rawAmount <= 0) {
+      showVerificationPopup();
+      closeModal();
+      return;
+    }
+    showVerificationPopup();
+    closeModal();
+  }
+
+  document.getElementById('depositBtn')?.addEventListener('click', () => openModal('deposit'));
+  document.getElementById('withdrawBtn')?.addEventListener('click', () => openModal('withdraw'));
+  confirmBtn?.addEventListener('click', handleTransactionAttempt);
+  cancelBtn?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  closeVerification?.addEventListener('click', closeVerificationPopup);
+
+  // Navigation & footer interactive messages (preserved)
+  function showInfoMessage(msg) { alert(msg); }
+  document.querySelectorAll('.nav-links a:not(#manualLogoutBtn)').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const navType = link.getAttribute('data-nav');
+      if (navType) showInfoMessage(`✨ ${navType} feature will be available soon.`);
+    });
+  });
+  document.querySelectorAll('.footer-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const policy = link.getAttribute('data-policy');
+      let msg = '';
+      if (policy === 'service') msg = '📄 Service Digital Agreement: Available at Access Bank Gambia branches.';
+      else if (policy === 'privacy') msg = '🔒 Privacy Policy: Your data is protected under GDPR & Gambia Data Protection Act.';
+      else if (policy === 'security') msg = '🛡️ Online Security: 256-bit SSL encryption, two-factor authentication ready.';
+      else msg = 'Access Gambia legal information.';
+      showInfoMessage(msg);
+    });
+  });
+
+  // Burger menu toggle
+  const burger = document.getElementById('burgerMenu');
+  const navLinksEl = document.getElementById('navLinks');
+  burger?.addEventListener('click', () => navLinksEl?.classList.toggle('nav-active'));
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 780) navLinksEl?.classList.remove('nav-active');
+    });
+  });
+
+  amountInput?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleTransactionAttempt();
+  });
+
+  // --- FINAL INITIALIZATION ---
+  initSession();              // mark session as active
+  loadBankData();
+  // Enforce exact fixed balance
+  currentBalance = 8741258.74;
+  persistData();
+  updateUI();
+  
+  // Setup manual logout button
+  setupManualLogout();
+  // Setup navigation guard to intercept any link leading to another page
+  setupNavigationGuard();
+</script>
+</body>
+</html>
