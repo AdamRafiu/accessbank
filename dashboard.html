@@ -57,9 +57,7 @@
       justify-content: center;
       box-shadow: 0 8px 14px rgba(0,51,102,0.2);
     }
-    .logo-icon img {
-        width: 100%;
-        height: 100%;
+    .logo-icon i {
       font-size: 26px;
       color: white;
     }
@@ -91,7 +89,6 @@
       border-bottom-color: #003366;
     }
 
-    /* Logout button style */
     .logout-btn {
       background: rgba(199, 54, 43, 0.1);
       border-radius: 40px;
@@ -155,10 +152,10 @@
       box-shadow: 0 8px 14px rgba(0,0,0,0.05);
     }
     .avatar img {
-      border-radius: 50%;
-      height: 100%;
-      width: 100%;
-      font-size: 42px;
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+      font-size: 48px;
       color: #003366;
     }
     .balance-area {
@@ -539,7 +536,7 @@
   <!-- Header / Nav -->
   <div class="container">
     <div class="logo">
-      <div class="logo-icon"><img src="logo.png" alt="access bank logo"></div>
+      <div class="logo-icon"><i class="fas fa-university"></i></div>
       <div class="logo-text">Access Bank Gambia</div>
     </div>
     <nav class="nav-links" id="navLinks">
@@ -562,7 +559,7 @@
         <p><i class="fas fa-check-circle" style="color:#2e7d32;"></i> Verified Account · Smart Access</p>
       </div>
       <div class="avatar">
-        <img src="profile.jpg" alt="profile pic">
+        <img src="profile.jpg" alt="profile-pic">
       </div>
     </div>
     <div class="balance-area">
@@ -626,7 +623,6 @@
   // ---------- SESSION MANAGEMENT (simple session flag) ----------
   const SESSION_KEY = 'access_bank_session';
   
-  // Initialize session when page loads
   function initSession() {
     if (!sessionStorage.getItem(SESSION_KEY)) {
       sessionStorage.setItem(SESSION_KEY, 'active');
@@ -639,78 +635,46 @@
   
   function clearSessionAndLogout() {
     sessionStorage.removeItem(SESSION_KEY);
-    // Optional: clear any other user data
     localStorage.removeItem('capitec_balance_gmd');
     localStorage.removeItem('capitec_transactions_gmd');
-    // Redirect to login page
     window.location.href = "index.html";
   }
   
-  // Manual logout from the logout button
   function setupManualLogout() {
     const logoutBtn = document.getElementById('manualLogoutBtn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', (e) => {
         e.preventDefault();
         const confirmLogout = confirm("Are you sure you want to logout? You will be redirected to the login page.");
-        if (confirmLogout) {
-          clearSessionAndLogout();
-        }
+        if (confirmLogout) clearSessionAndLogout();
       });
     }
   }
   
   // ---------- INTERCEPT ALL EXTERNAL PAGE NAVIGATION ----------
-  // This function will show a confirm popup: "Do you want to logout? (Yes = logout and go to login.html, No = stay on current page)"
   function handleExternalNavigation(event, targetUrl) {
-    // Prevent the default navigation
     event.preventDefault();
-    // Show custom confirm dialog
     const userConfirmed = confirm("You are about to leave the dashboard. Do you want to logout?");
-    if (userConfirmed) {
-      // Logout and redirect to login page (as requested)
-      clearSessionAndLogout();
-    }
-    // else: do nothing, stay on same page
+    if (userConfirmed) clearSessionAndLogout();
   }
   
-  // Determine if a link leads to a different page (not current page, not a hash, not javascript)
   function isPageNavigationLink(href) {
-    if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('void(0)')) {
-      return false;
-    }
-    // Check if it's a same-page anchor (starts with #)
+    if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('void(0)')) return false;
     if (href.startsWith('#')) return false;
-    // Compare with current URL (ignore hash and query parameters variations, but treat different path as navigation)
     try {
       const currentUrl = new URL(window.location.href);
       const targetUrl = new URL(href, window.location.href);
-      // If it's exactly the same path, same origin, same search, same hash? ignore
-      if (targetUrl.pathname === currentUrl.pathname && targetUrl.search === currentUrl.search) {
-        return false;
-      }
-      // Different pathname -> navigation to another page
+      if (targetUrl.pathname === currentUrl.pathname && targetUrl.search === currentUrl.search) return false;
       return true;
-    } catch(e) {
-      // if invalid URL, treat as not a navigation
-      return false;
-    }
+    } catch(e) { return false; }
   }
   
-  // Attach click listeners to all anchor tags that lead to other pages
   function setupNavigationGuard() {
     const allLinks = document.querySelectorAll('a');
     allLinks.forEach(link => {
-      // Skip links that already have a specific handler that we don't want to override?
-      // But we will add a new listener that runs before any other? Actually we want to intercept.
-      // We'll add a capturing event listener to ensure we catch it early.
       link.addEventListener('click', function(e) {
         const href = link.getAttribute('href');
-        // If session is active AND this link leads to a different page
         if (isSessionActive() && isPageNavigationLink(href)) {
-          // Check if the link has any custom handler that already prevents default? 
-          // We'll still intercept, but we must ensure we don't double-fire. 
-          // Use stopPropagation? Actually we just prevent default.
           e.preventDefault();
           e.stopImmediatePropagation();
           handleExternalNavigation(e, href);
@@ -719,7 +683,6 @@
     });
   }
   
-  // Also add a beforeunload warning to prevent accidental page refresh or closing tab
   window.addEventListener('beforeunload', (e) => {
     if (isSessionActive()) {
       e.preventDefault();
@@ -727,71 +690,138 @@
     }
   });
   
-  // ---------- ORIGINAL BANK LOGIC (unchanged except added session init) ----------
-  let currentBalance = 8741258.74;   // exactly D 8,741,258.74
+  // ---------- ACTUAL BANK LOGIC WITH EXACT TWO DEPOSITS SUMMING TO 8,741,258.74 GMD ----------
+  let currentBalance = 8741258.74;
   let transactions = [];
+
+  const TARGET_TOTAL = 8741258.74;
+  // Two deposits that sum exactly to TARGET_TOTAL
+  const DEPOSIT_ONE = 5000000.00;      // 5,000,000.00 GMD
+  const DEPOSIT_TWO = TARGET_TOTAL - DEPOSIT_ONE;  // 3,741,258.74 GMD
 
   const formatGMD = (amount) => {
     return `D ${amount.toLocaleString('en-GM', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
+  // Create the pristine history: exactly two deposit transactions, no withdrawals, sum = TARGET_TOTAL
+  function createTwoDepositHistory() {
+    const now = new Date();
+    const uniqueBase = Date.now();
+    return [
+      { 
+        id: uniqueBase + 1001, 
+        type: 'deposit', 
+        amount: DEPOSIT_ONE, 
+        date: new Date(now.getTime() - 86400000),  // yesterday
+        description: 'Salary Credit', 
+        recipient: 'Employer Services' 
+      },
+      { 
+        id: uniqueBase + 1002, 
+        type: 'deposit', 
+        amount: DEPOSIT_TWO, 
+        date: new Date(now.getTime() - 172800000), // 2 days ago
+        description: 'Investment Dividend', 
+        recipient: 'Access Wealth Fund' 
+      }
+    ];
+  }
+
+  // Force reset transaction history to the required two deposits only, ensures exact total shown
+  function enforceTwoDepositHistory() {
+    transactions = createTwoDepositHistory();
+    // Ensure balance matches the sum of these two deposits
+    currentBalance = DEPOSIT_ONE + DEPOSIT_TWO;
+    persistData();
+  }
+
   function loadBankData() {
     const savedBalance = localStorage.getItem('capitec_balance_gmd');
+    const savedTransactions = localStorage.getItem('capitec_transactions_gmd');
+    
+    // Check if we have stored data that might NOT match the requirement (two deposits summing to target total)
+    let needsReset = false;
+    
     if (savedBalance !== null && !isNaN(parseFloat(savedBalance))) {
       currentBalance = parseFloat(savedBalance);
     } else {
-      currentBalance = 8741258.74;
+      needsReset = true;
     }
-    const savedTransactions = localStorage.getItem('capitec_transactions_gmd');
+    
     if (savedTransactions) {
       try {
-        transactions = JSON.parse(savedTransactions);
-      } catch(e) { transactions = []; }
+        const parsed = JSON.parse(savedTransactions);
+        if (Array.isArray(parsed)) {
+          // Validate if the stored transaction list contains EXACTLY two deposits and their sum equals TARGET_TOTAL
+          const depositOnly = parsed.filter(tx => tx.type === 'deposit');
+          const withdrawalCount = parsed.filter(tx => tx.type === 'withdraw').length;
+          const sumDeposits = depositOnly.reduce((acc, tx) => acc + tx.amount, 0);
+          const exactMatch = (depositOnly.length === 2 && withdrawalCount === 0 && Math.abs(sumDeposits - TARGET_TOTAL) < 0.01);
+          
+          if (!exactMatch) {
+            needsReset = true;
+          } else {
+            transactions = parsed;
+            // Also ensure currentBalance matches the sum of deposits if no withdrawals exist
+            if (Math.abs(currentBalance - sumDeposits) > 0.01) {
+              currentBalance = sumDeposits;
+              persistData();
+            }
+          }
+        } else {
+          needsReset = true;
+        }
+      } catch(e) {
+        needsReset = true;
+      }
+    } else {
+      needsReset = true;
     }
-    if (!transactions || transactions.length === 0) {
-      seedDemoTransactions();
+    
+    if (needsReset) {
+      enforceTwoDepositHistory();
     }
+    
+    // Final sanity: if transactions still not the expected two deposits, force reset again
+    const depositTx = transactions.filter(tx => tx.type === 'deposit');
+    const withdrawTx = transactions.filter(tx => tx.type === 'withdraw');
+    if (depositTx.length !== 2 || withdrawTx.length > 0 || Math.abs((depositTx[0]?.amount || 0) + (depositTx[1]?.amount || 0) - TARGET_TOTAL) > 0.01) {
+      enforceTwoDepositHistory();
+    }
+    
+    // Ensure displayed balance is exactly TARGET_TOTAL (no rounding issues)
+    currentBalance = TARGET_TOTAL;
+    persistData();
     updateUI();
   }
-
+  
   function persistData() {
     localStorage.setItem('capitec_balance_gmd', currentBalance.toFixed(2));
     localStorage.setItem('capitec_transactions_gmd', JSON.stringify(transactions));
   }
 
-  function seedDemoTransactions() {
-    const now = new Date();
-    transactions = [
-      { id: Date.now() + 1, type: 'deposit', amount: 3500000.00, date: new Date(now.getTime() - 86400000), description: 'Salary deposit', recipient: 'Employer Inc.' },
-      { id: Date.now() + 2, type: 'deposit', amount: 2450000.00, date: new Date(now.getTime() - 172800000), description: 'Business income', recipient: 'Retail Ventures' },
-      { id: Date.now() + 3, type: 'deposit', amount: 2791258.74, date: new Date(now.getTime() - 259200000), description: 'Investment return', recipient: 'Wealth Fund' },
-      { id: Date.now() + 4, type: 'withdraw', amount: 12500.50, date: new Date(now.getTime() - 43200000), description: 'Online shopping', recipient: 'Jumia Gambia' },
-      { id: Date.now() + 5, type: 'withdraw', amount: 8400.00, date: new Date(now.getTime() - 21600000), description: 'Restaurant payment', recipient: 'Cafe Bar' },
-      { id: Date.now() + 6, type: 'withdraw', amount: 3100.25, date: new Date(now.getTime() - 10800000), description: 'Utility bill', recipient: 'NAWEC' }
-    ];
-    persistData();
-  }
-
   function updateUI() {
     const balanceEl = document.getElementById('balanceDisplay');
-    if (balanceEl) {
-      balanceEl.innerText = formatGMD(currentBalance);
-    }
+    if (balanceEl) balanceEl.innerText = formatGMD(currentBalance);
     renderTransactions();
     const today = new Date();
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-    document.getElementById('currentDateLabel').innerHTML = `<i class="far fa-calendar-alt"></i> ${today.toLocaleDateString('en-GM', options)}`;
+    const dateLabel = document.getElementById('currentDateLabel');
+    if (dateLabel) dateLabel.innerHTML = `<i class="far fa-calendar-alt"></i> ${today.toLocaleDateString('en-GM', options)}`;
   }
 
   function renderTransactions() {
     const container = document.getElementById('transactionsContainer');
     if (!container) return;
-    if (transactions.length === 0) {
+    if (!transactions.length) {
       container.innerHTML = `<div class="empty-transactions"><i class="fas fa-receipt"></i> <br>No transactions yet</div>`;
       return;
     }
     let html = '';
-    transactions.forEach(tx => {
+    // Show in chronological order (oldest first or newest? original behavior: as stored)
+    // For clarity sort by date ascending (older first)
+    const sorted = [...transactions].sort((a,b) => new Date(a.date) - new Date(b.date));
+    sorted.forEach(tx => {
       const isDeposit = tx.type === 'deposit';
       const iconClass = isDeposit ? 'fa-arrow-down' : 'fa-arrow-up';
       const amountClass = isDeposit ? 'positive' : 'negative';
@@ -805,7 +835,7 @@
           <div class="tra-left">
             <div class="icon-bg"><i class="fas ${iconClass}"></i></div>
             <div class="tx-details">
-              <p>${description} <span style="font-size:11px;">${tx.recipient ? '· '+tx.recipient.substring(0,18) : ''}</span></p>
+              <p>${description} <span style="font-size:11px;">${tx.recipient ? '· '+tx.recipient.substring(0,22) : ''}</span></p>
               <small><i class="far fa-clock"></i> ${dateStr}</small>
             </div>
           </div>
@@ -835,18 +865,9 @@
     amountInput.focus();
   }
 
-  function closeModal() {
-    modal.classList.remove('active');
-    activeModalType = null;
-  }
-
-  function showVerificationPopup() {
-    if (verificationAlert) verificationAlert.classList.add('active');
-  }
-
-  function closeVerificationPopup() {
-    if (verificationAlert) verificationAlert.classList.remove('active');
-  }
+  function closeModal() { modal.classList.remove('active'); activeModalType = null; }
+  function showVerificationPopup() { if (verificationAlert) verificationAlert.classList.add('active'); }
+  function closeVerificationPopup() { if (verificationAlert) verificationAlert.classList.remove('active'); }
 
   function handleTransactionAttempt() {
     let rawAmount = parseFloat(amountInput.value);
@@ -865,8 +886,8 @@
   cancelBtn?.addEventListener('click', closeModal);
   modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   closeVerification?.addEventListener('click', closeVerificationPopup);
-
-  // Navigation & footer interactive messages (preserved)
+  
+  // Navigation info messages (preserved)
   function showInfoMessage(msg) { alert(msg); }
   document.querySelectorAll('.nav-links a:not(#manualLogoutBtn)').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -898,21 +919,12 @@
     });
   });
 
-  amountInput?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleTransactionAttempt();
-  });
-
-  // --- FINAL INITIALIZATION ---
-  initSession();              // mark session as active
-  loadBankData();
-  // Enforce exact fixed balance
-  currentBalance = 8741258.74;
-  persistData();
-  updateUI();
+  amountInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleTransactionAttempt(); });
   
-  // Setup manual logout button
+  // --- FINAL INITIALIZATION ---
+  initSession();
+  loadBankData();   // loads / forces exactly two deposits summing to 8,741,258.74 GMD
   setupManualLogout();
-  // Setup navigation guard to intercept any link leading to another page
   setupNavigationGuard();
 </script>
 </body>
